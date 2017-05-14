@@ -18,6 +18,12 @@
 package sx.blah.discord.api.internal.json.event;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDArrayDeserializer;
+import sx.blah.discord.api.internal.IDArraySerializer;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
 import sx.blah.discord.api.internal.json.objects.GameObject;
 import sx.blah.discord.api.internal.json.objects.UserObject;
 
@@ -44,10 +50,14 @@ public class PresenceUpdateEventResponse {
 	/**
 	 * The roles the user is a part of
 	 */
-	public String[] roles;
+	@JsonSerialize(using = IDArraySerializer.class)
+	@JsonDeserialize(using = IDArrayDeserializer.class)
+	public long[] roles;
 
 	/**
 	 * The guild the presence updated in
 	 */
-	public String guild_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long guild_id;
 }

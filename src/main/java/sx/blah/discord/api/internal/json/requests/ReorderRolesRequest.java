@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.requests;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * This represents a single object which composes the reorder roles operation array parameter.
  */
@@ -25,14 +30,16 @@ public class ReorderRolesRequest {
 	/**
 	 * The id of the role.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long id;
 
 	/**
 	 * The new position of this role.
 	 */
 	public int position;
 
-	public ReorderRolesRequest(String id, int position) {
+	public ReorderRolesRequest(long id, int position) {
 		this.id = id;
 		this.position = position;
 	}

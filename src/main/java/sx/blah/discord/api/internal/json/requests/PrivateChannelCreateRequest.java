@@ -18,6 +18,11 @@
 package sx.blah.discord.api.internal.json.requests;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * This is used to request a private channel be created with a user
  */
@@ -26,9 +31,11 @@ public class PrivateChannelCreateRequest {
 	/**
 	 * The user id of the user the channel directed towards
 	 */
-	public String recipient_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long recipient_id;
 
-	public PrivateChannelCreateRequest(String recipient_id) {
+	public PrivateChannelCreateRequest(long recipient_id) {
 		this.recipient_id = recipient_id;
 	}
 }

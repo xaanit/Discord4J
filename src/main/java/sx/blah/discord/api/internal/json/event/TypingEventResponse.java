@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.event;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * A response sent when a user starts typing
  */
@@ -25,7 +30,9 @@ public class TypingEventResponse {
 	/**
 	 * The user's id who started typing
 	 */
-	public String user_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long user_id;
 
 	/**
 	 * The timestamp when the event was launching, in epoch milliseconds
@@ -35,5 +42,7 @@ public class TypingEventResponse {
 	/**
 	 * The channel id for where this is occurring
 	 */
-	public String channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long channel_id;
 }

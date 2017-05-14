@@ -15,45 +15,25 @@
  *     along with Discord4J.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package sx.blah.discord.api.internal.json.responses;
+package sx.blah.discord.api.internal;
 
-/**
- * A response received when changing account info
- */
-public class AccountInfoChangeResponse {
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-	/**
-	 * The new username
-	 */
-	public String username;
+import java.io.IOException;
 
-	/**
-	 * Whether the user has been verified
-	 */
-	public boolean verified;
-
-	/**
-	 * The user's id
-	 */
-	public String id;
-
-	/**
-	 * The new login token
-	 */
-	public String token;
-
-	/**
-	 * The new avatar id
-	 */
-	public String avatar;
-
-	/**
-	 * The user's new discriminator
-	 */
-	public String discriminator;
-
-	/**
-	 * The user's new email
-	 */
-	public String email;
+public class IDArraySerializer extends StdSerializer<long[]> {
+	
+	public IDArraySerializer() {
+		super(long[].class);
+	}
+	
+	@Override
+	public void serialize(long[] aLong, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+		jsonGenerator.writeStartArray();
+		for (Long num : aLong)
+			jsonGenerator.writeString(Long.toUnsignedString(num));
+		jsonGenerator.writeEndArray();
+	}
 }

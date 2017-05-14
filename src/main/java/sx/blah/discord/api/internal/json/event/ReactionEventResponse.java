@@ -17,6 +17,10 @@
 
 package sx.blah.discord.api.internal.json.event;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
 import sx.blah.discord.api.internal.json.objects.ReactionEmojiObject;
 
 /**
@@ -26,11 +30,15 @@ public class ReactionEventResponse {
 	/**
 	 * The id of the user who reacted
 	 */
-	public String user_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long user_id;
 	/**
 	 * The id of the message
 	 */
-	public String message_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long message_id;
 	/**
 	 * The emoji involved
 	 */
@@ -38,5 +46,7 @@ public class ReactionEventResponse {
 	/**
 	 * The channel involved
 	 */
-	public String channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long channel_id;
 }

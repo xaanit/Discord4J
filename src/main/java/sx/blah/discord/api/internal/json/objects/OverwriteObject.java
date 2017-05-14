@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a json permission overwrite object.
  */
@@ -24,7 +29,9 @@ public class OverwriteObject {
 	/**
 	 * The id of the overwrite.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long id;
 	/**
 	 * The type of the overwrite.
 	 */
@@ -40,7 +47,7 @@ public class OverwriteObject {
 
 	public OverwriteObject() {}
 
-	public OverwriteObject(String type, String id, int allow, int deny) {
+	public OverwriteObject(String type, Long id, int allow, int deny) {
 		this.id = id;
 		this.type = type;
 		this.allow = allow;

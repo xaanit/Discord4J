@@ -17,6 +17,7 @@
 
 package sx.blah.discord.api.internal.json.requests;
 
+import com.austinv11.etf.erlang.Tuple;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import sx.blah.discord.Discord4J;
 
@@ -25,13 +26,13 @@ public class IdentifyRequest {
 	private final Properties properties;
 	private final boolean compress;
 	private final int large_threshold;
-	private final int[] shard;
+	private final Tuple shard;
 
-	public IdentifyRequest(String token, int[] shard) {
+	public IdentifyRequest(String token, Tuple shard) {
 		this(token, new Properties(), true, 250, shard);
 	}
 
-	private IdentifyRequest(String token, Properties properties, boolean compress, int large_threshold, int[] shard) {
+	private IdentifyRequest(String token, Properties properties, boolean compress, int large_threshold, Tuple shard) {
 		this.token = token;
 		this.properties = properties;
 		this.compress = compress;

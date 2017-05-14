@@ -15,28 +15,25 @@
  *     along with Discord4J.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package sx.blah.discord.api.internal.json.event;
+package sx.blah.discord.api.internal;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import sx.blah.discord.api.internal.IDDeserializer;
-import sx.blah.discord.api.internal.IDSerializer;
-import sx.blah.discord.api.internal.json.objects.RoleObject;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-/**
- * This is received when a role is created or updated in a guild.
- */
-public class GuildRoleEventResponse {
+import java.io.IOException;
 
-	/**
-	 * The role involved.
-	 */
-	public RoleObject role;
-
-	/**
-	 * The guild id of the guild involved.
-	 */
-	@JsonSerialize(using = IDSerializer.class)
-	@JsonDeserialize(using = IDDeserializer.class)
-	public long guild_id;
+public class IDSerializer extends StdSerializer<Long> {
+	
+	public IDSerializer() {
+		super(Long.class);
+	}
+	
+	@Override
+	public void serialize(Long aLong, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+		if (aLong == null)
+			jsonGenerator.writeNull();
+		else
+			jsonGenerator.writeString(Long.toUnsignedString(aLong));
+	}
 }

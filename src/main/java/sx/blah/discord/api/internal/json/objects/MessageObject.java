@@ -17,6 +17,13 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDArrayDeserializer;
+import sx.blah.discord.api.internal.IDArraySerializer;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a message json object.
  */
@@ -24,7 +31,9 @@ public class MessageObject {
 	/**
 	 * The id of the message.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long id;
 	/**
 	 * The type of the message.
 	 */
@@ -32,7 +41,9 @@ public class MessageObject {
 	/**
 	 * The channel id for the channel this message was sent in.
 	 */
-	public String channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long channel_id;
 	/**
 	 * The author of the message.
 	 */
@@ -64,7 +75,9 @@ public class MessageObject {
 	/**
 	 * The roles the message mentions.
 	 */
-	public String[] mention_roles;
+	@JsonSerialize(using = IDArraySerializer.class)
+	@JsonDeserialize(using = IDArrayDeserializer.class)
+	public long[] mention_roles;
 	/**
 	 * The attachments on the message.
 	 */
@@ -88,7 +101,9 @@ public class MessageObject {
 	/**
 	 * The id of the webhook that sent the message.
 	 */
-	public String webhook_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long webhook_id;
 
 	/**
 	 * Represents a json message attachment object.
@@ -97,7 +112,9 @@ public class MessageObject {
 		/**
 		 * The id of the attachment.
 		 */
-		public String id;
+		@JsonSerialize(using = IDSerializer.class)
+		@JsonDeserialize(using = IDDeserializer.class)
+		public long id;
 		/**
 		 * The name of the attached file.
 		 */

@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.event;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * This response is received when a message is deleted
  */
@@ -25,16 +30,20 @@ public class MessageDeleteEventResponse {
 	/**
 	 * The message id
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long id;
 
 	/**
 	 * The channel the message was deleted from
 	 */
-	public String channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long channel_id;
 
 	public MessageDeleteEventResponse() {}
 
-	public MessageDeleteEventResponse(String id, String channel_id) {
+	public MessageDeleteEventResponse(long id, long channel_id) {
 		this.id = id;
 		this.channel_id = channel_id;
 	}

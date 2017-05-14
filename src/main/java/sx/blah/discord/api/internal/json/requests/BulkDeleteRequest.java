@@ -17,6 +17,10 @@
 
 package sx.blah.discord.api.internal.json.requests;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDArrayDeserializer;
+import sx.blah.discord.api.internal.IDArraySerializer;
 import sx.blah.discord.handle.obj.IDiscordObject;
 import sx.blah.discord.handle.obj.IMessage;
 
@@ -30,13 +34,15 @@ public class BulkDeleteRequest {
 	/**
 	 * The array of message ids to delete.
 	 */
-	public String[] messages;
+	@JsonSerialize(using = IDArraySerializer.class)
+	@JsonDeserialize(using = IDArrayDeserializer.class)
+	public long[] messages;
 
-	public BulkDeleteRequest(String[] messages) {
+	public BulkDeleteRequest(long[] messages) {
 		this.messages = messages;
 	}
 
 	public BulkDeleteRequest(List<IMessage> messages) {
-		this(messages.stream().map(IDiscordObject::getStringID).toArray(String[]::new));
+		this(messages.stream().mapToLong(IDiscordObject::getLongID).toArray());
 	}
 }

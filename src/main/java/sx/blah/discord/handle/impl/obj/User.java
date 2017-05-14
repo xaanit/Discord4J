@@ -258,7 +258,7 @@ public class User implements IUser {
 		try {
 			((DiscordClientImpl) client).REQUESTS.PATCH.makeRequest(
 					DiscordEndpoints.GUILDS + channel.getGuild().getStringID() + "/members/" + id,
-					DiscordUtils.MAPPER_NO_NULLS.writeValueAsString(new MemberEditRequest.Builder().channel(channel.getStringID()).build()));
+					DiscordUtils.MAPPER_NO_NULLS.writeValueAsString(new MemberEditRequest.Builder().channel(channel.getLongID()).build()));
 		} catch (JsonProcessingException e) {
 			Discord4J.LOGGER.error(LogMarkers.HANDLE, "Discord4J Internal Exception", e);
 		}

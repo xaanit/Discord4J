@@ -89,7 +89,7 @@ public class DiscordWS extends WebSocketAdapter {
 	@Override
 	public void onWebSocketClose(int statusCode, String reason) {
 		super.onWebSocketClose(statusCode, reason);
-		Discord4J.LOGGER.info(LogMarkers.WEBSOCKET, "Shard {} websocket disconnected with status code {} and reason \"{}\".", shard.getInfo()[0], statusCode, reason);
+		Discord4J.LOGGER.info(LogMarkers.WEBSOCKET, "Shard {} websocket disconnected with status code {} and reason \"{}\".", shard.getShardNumber(), statusCode, reason);
 
 		isReady = false;
 		hasReceivedReady = false;
@@ -149,7 +149,7 @@ public class DiscordWS extends WebSocketAdapter {
 					
 					heartbeatHandler.begin(d.getInt("heartbeat_interval"));
 					if (this.state != State.RESUMING) {
-						send(GatewayOps.IDENTIFY, new IdentifyRequest(client.getToken(), shard.getInfo()));
+						send(GatewayOps.IDENTIFY, new IdentifyRequest(client.getToken(), shard.info));
 					} else {
 						client.reconnectManager.onReconnectSuccess();
 						send(GatewayOps.RESUME, new ResumeRequest(client.getToken(), sessionId, seq));
@@ -162,17 +162,17 @@ public class DiscordWS extends WebSocketAdapter {
 					send(GatewayOps.RESUME, new ResumeRequest(client.getToken(), sessionId, seq));
 					break;
 				case DISPATCH:
-//						try {
-//							dispatchHandler.handle(json);
-//						} catch (Exception e) {
-//							Discord4J.LOGGER.error(LogMarkers.WEBSOCKET, "Discord4J Internal Exception", e);
-//						}
+					try {
+						dispatchHandler.handle(data, d);
+					} catch (Exception e) {
+						Discord4J.LOGGER.error(LogMarkers.WEBSOCKET, "Discord4J Internal Exception", e);
+					}
 					break;
 				case INVALID_SESSION:
 					this.state = State.RECONNECTING;
 					client.getDispatcher().dispatch(new DisconnectedEvent(DisconnectedEvent.Reason.INVALID_SESSION_OP, shard));
 					invalidate();
-					send(GatewayOps.IDENTIFY, new IdentifyRequest(client.getToken(), shard.getInfo()));
+					send(GatewayOps.IDENTIFY, new IdentifyRequest(client.getToken(), shard.info));
 					break;
 				case HEARTBEAT:
 					send(GatewayOps.HEARTBEAT, seq);

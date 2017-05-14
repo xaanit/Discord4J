@@ -17,6 +17,10 @@
 
 package sx.blah.discord.api.internal.json.event;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
 import sx.blah.discord.api.internal.json.objects.UserObject;
 
 /**
@@ -27,12 +31,16 @@ public class GuildMemberUpdateEventResponse {
 	/**
 	 * The guild affected.
 	 */
-	public String guild_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long guild_id;
 
 	/**
 	 * The user's roles.
 	 */
-	public String[] roles;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long[] roles;
 
 	/**
 	 * The user.

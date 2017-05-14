@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a json custom emoji object.
  */
@@ -24,7 +29,9 @@ public class EmojiObject {
 	/**
 	 * The id of the emoji.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long id;
 	/**
 	 * The name of the emoji.
 	 */
@@ -32,7 +39,9 @@ public class EmojiObject {
 	/**
 	 * Array of role IDs that can use the emoji.
 	 */
-	public String[] roles;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long[] roles;
 	/**
 	 * Whether the emoji must be wrapped in colons.
 	 */

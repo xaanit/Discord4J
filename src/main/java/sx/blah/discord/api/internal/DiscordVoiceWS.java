@@ -64,7 +64,7 @@ public class DiscordVoiceWS extends WebSocketAdapter implements IIDLinkedObject 
 		this.shard = (ShardImpl) shard;
 		this.endpoint = event.endpoint.replace(":80", "");
 		this.token = event.token;
-		this.guild = shard.getGuildByID(Long.parseUnsignedLong(event.guild_id));
+		this.guild = shard.getGuildByID(event.guild_id);
 	}
 
 	void connect() {
@@ -85,7 +85,7 @@ public class DiscordVoiceWS extends WebSocketAdapter implements IIDLinkedObject 
 		super.onWebSocketConnect(sess);
 		Discord4J.LOGGER.info(LogMarkers.VOICE_WEBSOCKET, "Voice Websocket Connected.");
 
-		send(VoiceOps.IDENTIFY, new VoiceIdentifyRequest(guild.getStringID(), shard.getClient().getOurUser().getStringID(), shard.ws.sessionId, token));
+		send(VoiceOps.IDENTIFY, new VoiceIdentifyRequest(guild.getLongID(), shard.getClient().getOurUser().getLongID(), shard.ws.sessionId, token));
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class DiscordVoiceWS extends WebSocketAdapter implements IIDLinkedObject 
 					break;
 				case SPEAKING:
 					VoiceSpeakingResponse response = DiscordUtils.MAPPER.treeToValue(d, VoiceSpeakingResponse.class);
-					IUser user = getGuild().getUserByID(Long.parseUnsignedLong(response.user_id));
+					IUser user = getGuild().getUserByID(response.user_id);
 					users.put(response.ssrc, user);
 					guild.getClient().getDispatcher().dispatch(new UserSpeakingEvent(user.getVoiceStateForGuild(guild).getChannel(), user, response.ssrc, response.speaking));
 					break;

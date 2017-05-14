@@ -26,11 +26,11 @@ public interface IIDLinkedObject {
 	 * Gets the snowflake unique id for this object.
 	 *
 	 * @return The id.
-	 * @deprecated Use {@link #getStringID()} instead as this will return a long in future versions.
+	 *
+	 * @see #getLongID()
 	 */
-	@Deprecated
-	default String getID() {
-		return getStringID();
+	default long getID() {
+		return getLongID();
 	}
 
 	/**

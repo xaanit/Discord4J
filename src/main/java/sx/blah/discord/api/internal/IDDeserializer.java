@@ -15,28 +15,27 @@
  *     along with Discord4J.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package sx.blah.discord.api.internal.json.event;
+package sx.blah.discord.api.internal;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import sx.blah.discord.api.internal.IDDeserializer;
-import sx.blah.discord.api.internal.IDSerializer;
-import sx.blah.discord.api.internal.json.objects.RoleObject;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-/**
- * This is received when a role is created or updated in a guild.
- */
-public class GuildRoleEventResponse {
+import java.io.IOException;
 
-	/**
-	 * The role involved.
-	 */
-	public RoleObject role;
-
-	/**
-	 * The guild id of the guild involved.
-	 */
-	@JsonSerialize(using = IDSerializer.class)
-	@JsonDeserialize(using = IDDeserializer.class)
-	public long guild_id;
+public class IDDeserializer extends StdDeserializer<Long> {
+	
+	public IDDeserializer() {
+		super(Long.class);
+	}
+	
+	@Override
+	public Long deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+		if (jsonParser.currentToken() == JsonToken.VALUE_NULL)
+			return null;
+		
+		return Long.parseUnsignedLong(jsonParser.getText());
+	}
 }

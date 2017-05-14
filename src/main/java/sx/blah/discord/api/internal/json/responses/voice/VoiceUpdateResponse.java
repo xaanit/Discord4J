@@ -17,11 +17,18 @@
 
 package sx.blah.discord.api.internal.json.responses.voice;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * The response from the join voice channel request
  */
 public class VoiceUpdateResponse {
 	public String token;
-	public String guild_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long guild_id;
 	public String endpoint;
 }

@@ -17,8 +17,15 @@
 
 package sx.blah.discord.api.internal.json.responses.voice;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 public class VoiceSpeakingResponse {
 	public boolean speaking;
 	public int ssrc;
-	public String user_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long user_id;
 }

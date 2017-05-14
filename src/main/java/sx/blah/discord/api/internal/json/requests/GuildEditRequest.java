@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.requests;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * This is sent to request that a guild be edited.
  */
@@ -45,14 +50,16 @@ public class GuildEditRequest {
 	/**
 	 * The afk channel id.
 	 */
-	public String afk_channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long afk_channel_id;
 
 	/**
 	 * The afk timeout.
 	 */
 	public int afk_timeout;
 
-	public GuildEditRequest(String name, String region, int verification_level, String icon, String afk_channel_id, int afk_timeout) {
+	public GuildEditRequest(String name, String region, int verification_level, String icon, Long afk_channel_id, int afk_timeout) {
 		this.name = name;
 		this.region = region;
 		this.verification_level = verification_level;

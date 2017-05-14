@@ -17,6 +17,13 @@
 
 package sx.blah.discord.api.internal.json.event;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDArrayDeserializer;
+import sx.blah.discord.api.internal.IDArraySerializer;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * This is received when a bot bulk deletes
  */
@@ -25,10 +32,14 @@ public class MessageDeleteBulkEventResponse {
 	/**
 	 * The ids of the messages deleted.
 	 */
-	public String[] ids;
+	@JsonSerialize(using = IDArraySerializer.class)
+	@JsonDeserialize(using = IDArrayDeserializer.class)
+	public long[] ids;
 
 	/**
 	 * The id of the channel the messages belong to.
 	 */
-	public String channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long channel_id;
 }

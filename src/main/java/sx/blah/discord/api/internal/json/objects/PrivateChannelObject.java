@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a json private channel object.
  * Used for convenience.
@@ -25,7 +30,9 @@ public class PrivateChannelObject {
 	/**
 	 * The id of the last message sent in the channel.
 	 */
-	public String last_message_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long last_message_id;
 	/**
 	 * the recipient of the channel.
 	 */
@@ -33,7 +40,9 @@ public class PrivateChannelObject {
 	/**
 	 * The id of the channel.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long id;
 	/**
 	 * Whether the channel is private.
 	 */

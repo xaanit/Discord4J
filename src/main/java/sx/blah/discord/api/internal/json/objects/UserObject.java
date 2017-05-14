@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a json user object.
  */
@@ -32,7 +37,9 @@ public class UserObject {
 	/**
 	 * The id of the user.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long id;
 	/**
 	 * The avatar of the user.
 	 */

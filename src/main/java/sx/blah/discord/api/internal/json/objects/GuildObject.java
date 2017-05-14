@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a json guild object.
  */
@@ -24,7 +29,9 @@ public class GuildObject {
 	/**
 	 * The id of the guild.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long id;
 	/**
 	 * The name of the guild.
 	 */
@@ -36,7 +43,9 @@ public class GuildObject {
 	/**
 	 * The id of the user that owns the guild.
 	 */
-	public String owner_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long owner_id;
 	/**
 	 * The region the guild's voice server is in.
 	 */
@@ -44,7 +53,9 @@ public class GuildObject {
 	/**
 	 * The id of the afk voice channel.
 	 */
-	public String afk_channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long afk_channel_id;
 	/**
 	 * The timeout for moving people to the afk voice channel.
 	 */
@@ -56,7 +67,9 @@ public class GuildObject {
 	/**
 	 * The id of the embedded channel.
 	 */
-	public String embed_channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long embed_channel_id;
 	/**
 	 * Level of verification.
 	 */

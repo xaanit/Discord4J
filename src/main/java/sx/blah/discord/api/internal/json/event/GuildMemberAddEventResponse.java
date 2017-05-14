@@ -18,6 +18,12 @@
 package sx.blah.discord.api.internal.json.event;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDArrayDeserializer;
+import sx.blah.discord.api.internal.IDArraySerializer;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
 import sx.blah.discord.api.internal.json.objects.UserObject;
 
 /**
@@ -33,7 +39,9 @@ public class GuildMemberAddEventResponse {
 	/**
 	 * The roles of the user.
 	 */
-	public String[] roles;
+	@JsonSerialize(using = IDArraySerializer.class)
+	@JsonDeserialize(using = IDArrayDeserializer.class)
+	public long[] roles;
 
 	/**
 	 * Timestamp for when the user joined
@@ -43,5 +51,7 @@ public class GuildMemberAddEventResponse {
 	/**
 	 * The guild id the user joined.
 	 */
-	public String guild_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long guild_id;
 }

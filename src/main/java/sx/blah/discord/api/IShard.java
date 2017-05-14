@@ -38,6 +38,20 @@ public interface IShard {
 	 * @return The sharding information.
 	 */
 	int[] getInfo();
+	
+	/**
+	 * Gets the current shard number.
+	 *
+	 * @return The shard number.
+	 */
+	int getShardNumber();
+	
+	/**
+	 * Gets the total number of shards.
+	 *
+	 * @return The total number of shards.
+	 */
+	int getTotalShardCount();
 
 	/**
 	 * Connects this shard to the Discord gateway.

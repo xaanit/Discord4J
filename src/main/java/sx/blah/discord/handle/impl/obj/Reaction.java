@@ -135,13 +135,13 @@ public class Reaction implements IReaction {
 				gottenSoFar += userObjs.length;
 
 				for (ReactionUserObject obj : userObjs) {
-					IUser u = getClient().getUserByID(Long.parseUnsignedLong(obj.id));
+					IUser u = getClient().getUserByID(obj.id);
 
 					if (u != null) {
 						users.add(u);
 					}
 
-					userAfter = obj.id;
+					userAfter = Long.toUnsignedString(obj.id);
 				}
 			}
 		}

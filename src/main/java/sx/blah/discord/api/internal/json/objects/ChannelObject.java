@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a json channel object.
  */
@@ -24,11 +29,15 @@ public class ChannelObject {
 	/**
 	 * The id of the channel.
 	 */
-	public String id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long id;
 	/**
 	 * The id of the guild this channel is in.
 	 */
-	public String guild_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long guild_id;
 	/**
 	 * The name of the channel.
 	 */
@@ -56,7 +65,9 @@ public class ChannelObject {
 	/**
 	 * ID of the last message sent in the channel.
 	 */
-	public String last_message_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long last_message_id;
 	/**
 	 * When the last pin was made in the channel.
 	 */

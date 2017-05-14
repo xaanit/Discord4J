@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDArrayDeserializer;
+import sx.blah.discord.api.internal.IDArraySerializer;
+
 /**
  * Represents a json member object.
  */
@@ -32,7 +37,9 @@ public class MemberObject {
 	/**
 	 * The roles of the member.
 	 */
-	public String[] roles;
+	@JsonSerialize(using = IDArraySerializer.class)
+	@JsonDeserialize(using = IDArrayDeserializer.class)
+	public long[] roles;
 	/**
 	 * When the member joined the guild.
 	 */
@@ -48,7 +55,7 @@ public class MemberObject {
 
 	public MemberObject() {}
 
-	public MemberObject(UserObject user, String[] roles) {
+	public MemberObject(UserObject user, long[] roles) {
 		this.user = user;
 		this.roles = roles;
 	}

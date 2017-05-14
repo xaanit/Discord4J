@@ -17,11 +17,18 @@
 
 package sx.blah.discord.api.internal.json.requests;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 public class GuildMembersRequest {
 	/**
 	 * The guild's id
 	 */
-	public String guild_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long guild_id;
 
 	/**
 	 * String the username starts with or empty for all users.
@@ -33,7 +40,7 @@ public class GuildMembersRequest {
 	 */
 	public int limit = 0;
 
-	public GuildMembersRequest(String guild_id) {
+	public GuildMembersRequest(long guild_id) {
 		this.guild_id = guild_id;
 	}
 }

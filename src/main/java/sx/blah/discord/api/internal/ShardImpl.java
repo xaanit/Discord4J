@@ -17,6 +17,7 @@
 
 package sx.blah.discord.api.internal;
 
+import com.austinv11.etf.erlang.Tuple;
 import sx.blah.discord.Discord4J;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.IShard;
@@ -44,14 +45,14 @@ public class ShardImpl implements IShard {
 	public volatile DiscordWS ws;
 
 	private final String gateway;
-	private final int[] info;
+	public final Tuple info;
 
 	private final DiscordClientImpl client;
 	final Cache<IGuild> guildCache;
 	final Cache<IPrivateChannel> privateChannels;
 	public final Cache<DiscordVoiceWS> voiceWebSockets;
 
-	ShardImpl(IDiscordClient client, String gateway, int[] info) {
+	ShardImpl(IDiscordClient client, String gateway, Tuple info) {
 		this.client = (DiscordClientImpl) client;
 		this.gateway = gateway;
 		this.info = info;
@@ -67,9 +68,19 @@ public class ShardImpl implements IShard {
 
 	@Override
 	public int[] getInfo() {
-		return this.info;
+		return new int[] {info.getInt(0), info.getInt(1)};
 	}
-
+	
+	@Override
+	public int getShardNumber() {
+		return info.getInt(0);
+	}
+	
+	@Override
+	public int getTotalShardCount() {
+		return info.getInt(1);
+	}
+	
 	@Override
 	public void login() {
 		Discord4J.LOGGER.trace(LogMarkers.API, "Shard logging in.");
@@ -306,7 +317,7 @@ public class ShardImpl implements IShard {
 
 		PrivateChannelObject pmChannel = client.REQUESTS.POST.makeRequest(
 				DiscordEndpoints.USERS+getClient().getOurUser().getStringID()+"/channels",
-				new PrivateChannelCreateRequest(user.getStringID()),
+				new PrivateChannelCreateRequest(user.getLongID()),
 				PrivateChannelObject.class);
 		channel = DiscordUtils.getPrivateChannelFromJSON(this, pmChannel);
 		privateChannels.put(channel);

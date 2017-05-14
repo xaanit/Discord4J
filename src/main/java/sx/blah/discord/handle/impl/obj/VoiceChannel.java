@@ -123,7 +123,7 @@ public class VoiceChannel extends Channel implements IVoiceChannel {
 		boolean isMuted = voiceState != null && voiceState.isMuted();
 		boolean isDeafened = voiceState != null && voiceState.isDeafened();
 		((ShardImpl) getShard()).ws.send(GatewayOps.VOICE_STATE_UPDATE,
-				new VoiceStateUpdateRequest(getGuild().getStringID(), getStringID(), isMuted, isDeafened));
+				new VoiceStateUpdateRequest(getGuild().getLongID(), getLongID(), isMuted, isDeafened));
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class VoiceChannel extends Channel implements IVoiceChannel {
 		boolean isDeafened = voiceState != null && voiceState.isDeafened();
 
 		((ShardImpl) getShard()).ws.send(GatewayOps.VOICE_STATE_UPDATE,
-				new VoiceStateUpdateRequest(getGuild().getStringID(), null, isMuted, isDeafened));
+				new VoiceStateUpdateRequest(getGuild().getLongID(), null, isMuted, isDeafened));
 
 		DiscordVoiceWS vWS = ((ShardImpl) getShard()).voiceWebSockets.get(getGuild().getLongID());
 		if (vWS != null) {

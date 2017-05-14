@@ -17,6 +17,7 @@
 
 package sx.blah.discord.api.internal;
 
+import com.austinv11.etf.erlang.Tuple;
 import sx.blah.discord.Discord4J;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.IShard;
@@ -258,7 +259,7 @@ public final class DiscordClientImpl implements IDiscordClient {
 		try {
 			UserObject owner = getApplicationInfo().owner;
 
-			IUser user = getUserByID(Long.parseUnsignedLong(owner.id));
+			IUser user = getUserByID(owner.id);
 			if (user == null)
 				user = DiscordUtils.getUserFromJSON(getShards().get(0), owner);
 
@@ -299,7 +300,7 @@ public final class DiscordClientImpl implements IDiscordClient {
 		new RequestBuilder(this).setAsync(true).doAction(() -> {
 			for (int i = 0; i < shardCount; i++) {
 				final int shardNum = i;
-				ShardImpl shard = new ShardImpl(this, gateway, new int[] {shardNum, shardCount});
+				ShardImpl shard = new ShardImpl(this, gateway, Tuple.of(shardNum, shardCount));
 				getShards().add(shardNum, shard);
 				shard.login();
 

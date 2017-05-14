@@ -45,7 +45,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Channel implements IChannel {
@@ -1077,7 +1076,7 @@ public class Channel implements IChannel {
 
 				if (response != null) {
 					for (WebhookObject webhookObject : response) {
-						long webhookId = Long.parseUnsignedLong(webhookObject.id);
+						long webhookId = webhookObject.id;
 						if (getWebhookByID(webhookId) == null) {
 							IWebhook newWebhook = DiscordUtils.getWebhookFromJSON(this, webhookObject);
 							client.getDispatcher().dispatch(new WebhookCreateEvent(newWebhook));

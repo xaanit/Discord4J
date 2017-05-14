@@ -17,6 +17,11 @@
 
 package sx.blah.discord.api.internal.json.objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 /**
  * Represents a json invite object.
  */
@@ -46,7 +51,9 @@ public class InviteObject {
 		/**
 		 * ID of the guild.
 		 */
-		public String id;
+		@JsonSerialize(using = IDSerializer.class)
+		@JsonDeserialize(using = IDDeserializer.class)
+		public long id;
 		/**
 		 * Name of the guild.
 		 */
@@ -68,7 +75,9 @@ public class InviteObject {
 		/**
 		 * ID of the channel.
 		 */
-		public String id;
+		@JsonSerialize(using = IDSerializer.class)
+		@JsonDeserialize(using = IDDeserializer.class)
+		public long id;
 		/**
 		 * Name of the channel.
 		 */

@@ -566,7 +566,7 @@ public class Guild implements IGuild {
 
 		((DiscordClientImpl) client).REQUESTS.PATCH.makeRequest(
 				DiscordEndpoints.GUILDS + getStringID(), new GuildEditRequest(name, region.getID(), level.ordinal(), icon.getData(),
-						afkChannel == null ? null : afkChannel.getStringID(), afkTimeout));
+						afkChannel == null ? null : afkChannel.getLongID(), afkTimeout));
 	}
 
 	@Override
@@ -748,7 +748,7 @@ public class Guild implements IGuild {
 			if (newPosition != oldPosition && oldPosition >= usersHighest) { // If the position was changed and the user doesn't have permission to change it.
 				throw new MissingPermissionsException("Cannot edit the position of a role higher than or equal to your own.", EnumSet.noneOf(Permissions.class));
 			} else {
-				request[i] = new ReorderRolesRequest(role.getStringID(), i);
+				request[i] = new ReorderRolesRequest(role.getLongID(), i);
 			}
 		}
 
@@ -892,8 +892,8 @@ public class Guild implements IGuild {
 
 				if (response != null) {
 					for (WebhookObject webhookObject : response) {
-						Channel channel = (Channel) getChannelByID(Long.parseUnsignedLong(webhookObject.channel_id));
-						long webhookId = Long.parseUnsignedLong(webhookObject.id);
+						Channel channel = (Channel) getChannelByID(webhookObject.channel_id);
+						long webhookId = webhookObject.id;
 						if (getWebhookByID(webhookId) == null) {
 							IWebhook newWebhook = DiscordUtils.getWebhookFromJSON(channel, webhookObject);
 							client.getDispatcher().dispatch(new WebhookCreateEvent(newWebhook));

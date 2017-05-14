@@ -17,13 +17,22 @@
 
 package sx.blah.discord.api.internal.json.requests.voice;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
+
 public class VoiceIdentifyRequest {
-	private String server_id;
-	private String user_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	private long server_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	private long user_id;
 	private String session_id;
 	private String token;
 
-	public VoiceIdentifyRequest(String server_id, String user_id, String session_id, String token) {
+	public VoiceIdentifyRequest(long server_id, long user_id, String session_id, String token) {
 		this.server_id = server_id;
 		this.user_id = user_id;
 		this.session_id = session_id;

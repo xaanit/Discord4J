@@ -17,6 +17,12 @@
 
 package sx.blah.discord.api.internal.json.requests;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDArrayDeserializer;
+import sx.blah.discord.api.internal.IDArraySerializer;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
 import sx.blah.discord.handle.obj.IRole;
 
 import java.util.Arrays;
@@ -29,7 +35,7 @@ public class MemberEditRequest {
 		private String nick;
 		private Boolean mute;
 		private Boolean deafen;
-		private String channelID;
+		private Long channelID;
 
 		/**
 		 * Sets the roles for the user to have.
@@ -81,7 +87,7 @@ public class MemberEditRequest {
 		 * @param channelID the target voice channel ID to move the user to.
 		 * @return this builder, for chaining.
 		 */
-		public Builder channel(String channelID) {
+		public Builder channel(Long channelID) {
 			this.channelID = channelID;
 			return this;
 		}
@@ -95,22 +101,26 @@ public class MemberEditRequest {
 			return new MemberEditRequest(roles, nick, mute, deafen, channelID);
 		}
 	}
-
-	private final String[] roles;
+	
+	@JsonSerialize(using = IDArraySerializer.class)
+	@JsonDeserialize(using = IDArrayDeserializer.class)
+	private final long[] roles;
 	private final String nick;
 	private final Boolean mute;
 	private final Boolean deaf;
-	private final String channel_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	private final Long channel_id;
 
-	MemberEditRequest(IRole[] roles, String nick, Boolean mute, Boolean deaf, String channelID) {
-		this.roles = roles == null ? null : Arrays.stream(roles).map(IRole::getStringID).distinct().toArray(String[]::new);
+	MemberEditRequest(IRole[] roles, String nick, Boolean mute, Boolean deaf, Long channelID) {
+		this.roles = roles == null ? null : Arrays.stream(roles).mapToLong(IRole::getLongID).distinct().toArray();
 		this.nick = nick;
 		this.mute = mute;
 		this.deaf = deaf;
 		this.channel_id = channelID;
 	}
 
-	public String[] getRoles() {
+	public long[] getRoles() {
 		return roles;
 	}
 
@@ -126,7 +136,7 @@ public class MemberEditRequest {
 		return deaf;
 	}
 
-	public String getChannelID() {
+	public Long getChannelID() {
 		return channel_id;
 	}
 }

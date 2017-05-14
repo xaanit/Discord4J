@@ -17,14 +17,23 @@
 
 package sx.blah.discord.api.internal.json.requests.voice;
 
-public class VoiceStateUpdateRequest {
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sx.blah.discord.api.internal.IDDeserializer;
+import sx.blah.discord.api.internal.IDSerializer;
 
-	public String guild_id;
-	public String channel_id;
+public class VoiceStateUpdateRequest {
+	
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public long guild_id;
+	@JsonSerialize(using = IDSerializer.class)
+	@JsonDeserialize(using = IDDeserializer.class)
+	public Long channel_id;
 	public boolean self_mute;
 	public boolean self_deaf;
 
-	public VoiceStateUpdateRequest(String guild_id, String channel_id, boolean self_mute, boolean self_deaf) {
+	public VoiceStateUpdateRequest(long guild_id, Long channel_id, boolean self_mute, boolean self_deaf) {
 		this.guild_id = guild_id;
 		this.channel_id = channel_id;
 		this.self_mute = self_mute;
