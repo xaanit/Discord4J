@@ -17,6 +17,8 @@
 
 package sx.blah.discord.api.internal;
 
+import com.austinv11.etf.ETFConfig;
+import com.austinv11.etf.util.Mapper;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -93,7 +95,26 @@ public class DiscordUtils {
 			.enable(JsonParser.Feature.ALLOW_MISSING_VALUES)
 			.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
 			.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
+	/**
+	 * The ETF configuration.
+	 */
+	public static final ETFConfig ETF_CONFIG = new ETFConfig()
+			.setBert(false)
+			.setIncludeDistributionHeader(false)
+			.setLoqui(true)
+			.setCompression(false)
+			.setIncludeHeader(false);
+	/**
+	 * The compressed ETF configuration.
+	 */
+	public static final ETFConfig ETF_CONFIG_COMPRESSED = new ETFConfig()
+			.setBert(false)
+			.setIncludeDistributionHeader(false)
+			.setLoqui(true)
+			.setCompression(true)
+			.setIncludeHeader(true);
+	public static final Mapper ETF_MAPPER = ETF_CONFIG.createMapper();
+	
 	/**
 	 * Used to determine age based on discord ids
 	 */

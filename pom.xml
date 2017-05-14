@@ -166,6 +166,12 @@
 			<artifactId>koloboke-impl-common-jdk8</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.austinv11</groupId>
+			<artifactId>etf-java</artifactId>
+			<version>7d8b21d</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -295,6 +301,10 @@
 		<repository>
 			<id>jcenter</id>
 			<url>http://jcenter.bintray.com/</url>
+		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 </project>
