@@ -25,15 +25,15 @@ public class GameObject {
 	/**
 	 * The GameObject type integer for playing a game.
 	 */
-	public static final int GAME = 0;
+	public transient static final int GAME = 0;
 	/**
 	 * The GameObject type integer for streaming a game.
 	 */
-	public static final int STREAMING = 1;
+	public transient static final int STREAMING = 1;
 	/**
 	 * The GameObject type integer for lack of playing/streaming anything.
 	 */
-	public static final int NONE = 0;
+	public transient static final int NONE = 0;
 
 	/**
 	 * The type of the game.

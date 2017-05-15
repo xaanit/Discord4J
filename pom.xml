@@ -170,7 +170,7 @@
 		<dependency>
 			<groupId>com.github.austinv11</groupId>
 			<artifactId>etf-java</artifactId>
-			<version>e863ed8</version>
+			<version>9fa6548</version>
 		</dependency>
 	</dependencies>
 
