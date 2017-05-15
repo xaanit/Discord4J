@@ -128,7 +128,7 @@ public class DiscordWS extends WebSocketAdapter {
 	public void onWebSocketBinary(byte[] payload, int offset, int len) {
 		ETFParser parser = DiscordUtils.ETF_CONFIG.createParser(payload);
 		
-		if (parser.peek() == 80)
+		if (parser.peek() != TermTypes.MAP_EXT)
 			parser = DiscordUtils.ETF_CONFIG_COMPRESSED.createParser(payload);
 		
 		if (Discord4J.LOGGER.isTraceEnabled(LogMarkers.WEBSOCKET_TRAFFIC)) {

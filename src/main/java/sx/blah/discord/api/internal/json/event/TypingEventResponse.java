@@ -37,7 +37,7 @@ public class TypingEventResponse {
 	/**
 	 * The timestamp when the event was launching, in epoch milliseconds
 	 */
-	public long timestamp;
+	public int timestamp;
 
 	/**
 	 * The channel id for where this is occurring
