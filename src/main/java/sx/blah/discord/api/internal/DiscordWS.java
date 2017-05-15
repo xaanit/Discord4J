@@ -138,7 +138,10 @@ public class DiscordWS extends WebSocketAdapter {
 		if (parser.peek() == TermTypes.MAP_EXT) {
 			ErlangMap data = parser.nextMap();
 			GatewayOps op = GatewayOps.get(data.getInt("op"));
-			ErlangMap d = data.containsKey("d") ? data.getErlangMap("d") : null;
+			Object dIntermediate = data.getOrDefault("d", null);
+			ErlangMap d = null;
+			if (dIntermediate != null && dIntermediate instanceof ErlangMap)
+				d = (ErlangMap) dIntermediate;
 			
 			if (data.containsKey("s") && data.get("s") != null)
 				seq = data.getInt("s");

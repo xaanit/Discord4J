@@ -731,7 +731,7 @@ class DispatchHandler {
 					list.add(user);
 
 					reaction = new Reaction(message.getShard(), 1, list,
-							event.emoji.id != null ? event.emoji.id : event.emoji.name, event.emoji.id != null);
+							event.emoji.id != null ? Long.toUnsignedString(event.emoji.id) : event.emoji.name, event.emoji.id != null);
 
 					message.getReactions().add(reaction);
 				} else if (channel.getMessageHistory().contains(message.getLongID())) { //If the message is in the internal cache then it doesn't have the most up to date reaction count
@@ -758,7 +758,7 @@ class DispatchHandler {
 			if (message != null) {
 				Reaction reaction = (Reaction) (event.emoji.id == null
 						? message.getReactionByUnicode(event.emoji.name)
-						: message.getReactionByIEmoji(message.getGuild().getEmojiByID(Long.parseUnsignedLong(event.emoji.id))));
+						: message.getReactionByIEmoji(message.getGuild().getEmojiByID(event.emoji.id)));
 				IUser user = message.getClient().getUserByID(event.user_id);
 
 				if (reaction != null) {
@@ -770,7 +770,7 @@ class DispatchHandler {
 						message.getReactions().remove(reaction);
 					}
 				} else {
-					IEmoji custom = event.emoji.id == null ? null : channel.getGuild().getEmojiByID(Long.parseUnsignedLong(event.emoji.id));
+					IEmoji custom = event.emoji.id == null ? null : channel.getGuild().getEmojiByID(event.emoji.id);
 					reaction = new Reaction(channel.getShard(), 0, new ArrayList<>(), custom != null ? custom.getStringID() : event.emoji.name, custom != null);
 				}
 

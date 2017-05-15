@@ -364,7 +364,7 @@ public class DiscordUtils {
 	public static IReaction getReactionFromJSON(IShard shard, MessageObject.ReactionObject object) {
 		Reaction reaction = new Reaction(shard, object.count, new CopyOnWriteArrayList<>(),
 				object.emoji.id != null
-						? object.emoji.id
+						? Long.toUnsignedString(object.emoji.id)
 						: object.emoji.name, object.emoji.id != null);
 
 
