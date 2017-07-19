@@ -21,6 +21,8 @@ import sx.blah.discord.handle.obj.IWebhook;
 
 /**
  * This event is dispatched whenever a webhook is updated.
+ *
+ * @deprecated This event is never fired.
  */
 public class WebhookUpdateEvent extends WebhookEvent {
 

@@ -351,11 +351,6 @@ public class VoiceChannel extends Channel implements IVoiceChannel {
 	}
 
 	@Override
-	public void loadWebhooks() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public IVoiceChannel copy() {
 		return new VoiceChannel(client, name, id, guild, topic, position, userLimit, bitrate, roleOverrides.copy(), userOverrides.copy());
 	}

@@ -201,11 +201,6 @@ public class PrivateChannel extends Channel implements IPrivateChannel {
 	}
 
 	@Override
-	public void loadWebhooks() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public List<IUser> getUsersHere() {
 		return Collections.singletonList(recipient);
 	}

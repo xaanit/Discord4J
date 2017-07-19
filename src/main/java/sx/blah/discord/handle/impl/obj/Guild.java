@@ -855,77 +855,34 @@ public class Guild implements IGuild {
 
 	@Override
 	public IWebhook getWebhookByID(long id) {
-		return channels.stream()
-				.map(channel -> channel.getWebhookByID(id))
-				.filter(Objects::nonNull)
-				.findAny().orElse(null);
+		WebhookObject webhook = ((DiscordClientImpl) client).REQUESTS.GET.makeRequest(
+				DiscordEndpoints.WEBHOOKS + Long.toUnsignedString(id),
+				WebhookObject.class);
+
+		return DiscordUtils.getWebhookFromJSON(getShard(), webhook);
 	}
 
 	@Override
 	public List<IWebhook> getWebhooksByName(String name) {
-		return channels.stream()
-				.map(IChannel::getWebhooks)
-				.flatMap(List::stream)
-				.filter(hook -> hook.getDefaultName().equals(name))
+		return getWebhooks().stream()
+				.filter(w -> w.getDefaultName().equals(name))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<IWebhook> getWebhooks() {
-		return channels.stream()
-				.map(IChannel::getWebhooks)
-				.flatMap(List::stream)
-				.collect(Collectors.toList());
-	}
+		WebhookObject[] webhooks = ((DiscordClientImpl) client).REQUESTS.GET.makeRequest(
+				DiscordEndpoints.GUILDS + getStringID() + "/webhooks/",
+				WebhookObject[].class);
 
-	public void loadWebhooks() {
-		try {
-			PermissionUtils.requirePermissions(this, client.getOurUser(), Permissions.MANAGE_WEBHOOKS);
-		} catch (MissingPermissionsException ignored) {
-			return;
+		if (webhooks == null) {
+			return new ArrayList<>();
 		}
 
-		RequestBuffer.request(() -> {
-			try {
-				List<IWebhook> oldList = getWebhooks()
-						.stream()
-						.map(IWebhook::copy)
-						.collect(Collectors.toCollection(CopyOnWriteArrayList::new));
-
-				WebhookObject[] response = ((DiscordClientImpl) client).REQUESTS.GET.makeRequest(
-						DiscordEndpoints.GUILDS + getStringID() + "/webhooks",
-						WebhookObject[].class);
-
-				if (response != null) {
-					for (WebhookObject webhookObject : response) {
-						Channel channel = (Channel) getChannelByID(Long.parseUnsignedLong(webhookObject.channel_id));
-						long webhookId = Long.parseUnsignedLong(webhookObject.id);
-						if (getWebhookByID(webhookId) == null) {
-							IWebhook newWebhook = DiscordUtils.getWebhookFromJSON(channel, webhookObject);
-							client.getDispatcher().dispatch(new WebhookCreateEvent(newWebhook));
-							channel.webhooks.put(newWebhook);
-						} else {
-							IWebhook toUpdate = channel.getWebhookByID(webhookId);
-							IWebhook oldWebhook = toUpdate.copy();
-							toUpdate = DiscordUtils.getWebhookFromJSON(channel, webhookObject);
-							if (!oldWebhook.getDefaultName().equals(toUpdate.getDefaultName()) || !String.valueOf(oldWebhook.getDefaultAvatar()).equals(String.valueOf(toUpdate.getDefaultAvatar())))
-								client.getDispatcher().dispatch(new WebhookUpdateEvent(oldWebhook, toUpdate));
-
-							oldList.remove(oldWebhook);
-						}
-					}
-				}
-
-				oldList.forEach(webhook -> {
-					((Channel) webhook.getChannel()).webhooks.remove(webhook);
-					client.getDispatcher().dispatch(new WebhookDeleteEvent(webhook));
-				});
-			} catch (Exception e) {
-				Discord4J.LOGGER.warn(LogMarkers.HANDLE, "Discord4J Internal Exception", e);
-			}
-		});
+		return Arrays.stream(webhooks)
+				.map(json -> DiscordUtils.getWebhookFromJSON(getShard(), json))
+				.collect(Collectors.toList());
 	}
-
 
 	@Override
 	public int getTotalMemberCount() {

@@ -15,18 +15,9 @@
  *     along with Discord4J.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package sx.blah.discord.handle.impl.events.guild.channel.webhook;
+package sx.blah.discord.api.internal.json.event;
 
-import sx.blah.discord.handle.obj.IWebhook;
-
-/**
- * This event is dispatched whenever a webhook is created or discovered.
- *
- * @deprecated This event is never fired.
- */
-public class WebhookCreateEvent extends WebhookEvent {
-
-	public WebhookCreateEvent(IWebhook webhook) {
-		super(webhook);
-	}
+public class WebhookUpdateEventResponse {
+	public String guild_id;
+	public String channel_id;
 }

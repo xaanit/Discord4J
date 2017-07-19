@@ -22,17 +22,55 @@ package sx.blah.discord.api.internal.json.requests;
  */
 public class WebhookEditRequest {
 
+	public static class Builder {
+
+		private String name;
+		private String avatar;
+
+		/**
+		 * Sets the new name of the webhook.
+		 *
+		 * @param name The new name
+		 * @return This builder, for chaining.
+		 */
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		/**
+		 * Sets the new avatar of the webhook.
+		 *
+		 * @param avatar The new avatar.
+		 * @return This builder, for chaining.
+		 */
+		public Builder avatar(String avatar) {
+			this.avatar = avatar;
+			return this;
+		}
+
+		/**
+		 * Builds the webhook edit request.
+		 *
+		 * @return The webhook edit request.
+		 */
+		public WebhookEditRequest build() {
+			return new WebhookEditRequest(name, avatar);
+		}
+
+	}
+
 	/**
 	 * The new name of the webhook.
 	 */
-	public String name;
+	private final String name;
 
 	/**
 	 * The new icon.
 	 */
-	public String avatar;
+	private final String avatar;
 
-	public WebhookEditRequest(String name, String avatar) {
+	private WebhookEditRequest(String name, String avatar) {
 		this.name = name;
 		this.avatar = avatar;
 	}

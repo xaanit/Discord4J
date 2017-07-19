@@ -457,31 +457,13 @@ public class DiscordUtils {
 		return message;
 	}
 
-	/**
-	 * Creates a webhook object from a json response.
-	 *
-	 * @param channel The webhook.
-	 * @param json The json response.
-	 * @return The message object.
-	 */
-	public static IWebhook getWebhookFromJSON(IChannel channel, WebhookObject json) {
-		long webhookId = Long.parseUnsignedLong(json.id);
-		if (channel.getWebhookByID(webhookId) != null) {
-			Webhook webhook = (Webhook) channel.getWebhookByID(webhookId);
-			webhook.setName(json.name);
-			webhook.setAvatar(json.avatar);
+	public static IWebhook getWebhookFromJSON(IShard shard, WebhookObject json) {
+		long id = Long.parseUnsignedLong(json.id);
+		IGuild guild = shard.getGuildByID(Long.parseUnsignedLong(json.guild_id));
+		IChannel channel = guild.getChannelByID(Long.parseUnsignedLong(json.guild_id));
+		IUser author = DiscordUtils.getUserFromJSON(shard, json.user);
 
-			return webhook;
-		} else {
-			long userId = Long.parseUnsignedLong(json.user.id);
-			IUser author = channel.getGuild()
-					.getUsers()
-					.stream()
-					.filter(it -> it.getLongID() == userId)
-					.findAny()
-					.orElseGet(() -> getUserFromJSON(channel.getShard(), json.user));
-			return new Webhook(channel.getClient(), json.name, Long.parseUnsignedLong(json.id), channel, author, json.avatar, json.token);
-		}
+		return new Webhook(id, channel, author, json.name, json.avatar, json.token);
 	}
 
 	/**

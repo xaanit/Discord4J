@@ -163,7 +163,7 @@ class DispatchHandler {
 					case "MESSAGE_REACTION_REMOVE_ALL": /* REMOVE_ALL is 204 empty but REACTION_REMOVE is sent anyway */
 						break;
 					case "WEBHOOKS_UPDATE":
-						webhookUpdate(MAPPER.treeToValue(json, WebhookObject.class));
+						webhookUpdate(MAPPER.treeToValue(json, WebhookUpdateEventResponse.class));
 						break;
 					case "PRESENCES_REPLACE": /* Ignored. Not meant for bot accounts. */
 						break;
@@ -323,7 +323,6 @@ class DispatchHandler {
 			}
 			return true;
 		}).andThen(() -> {
-			guild.loadWebhooks();
 			client.dispatcher.dispatch(new GuildCreateEvent(guild));
 			Discord4J.LOGGER.debug(LogMarkers.EVENTS, "New guild has been created/joined! \"{}\" with ID {} on shard {}.", guild.getName(), guild.getStringID(), shard.getInfo()[0]);
 			return true;
@@ -389,9 +388,6 @@ class DispatchHandler {
 				user.addRole(guild.getLongID(), guild.getEveryoneRole());
 
 				client.dispatcher.dispatch(new UserRoleUpdateEvent(guild, user, oldRoles, user.getRolesForGuild(guild)));
-
-				if (user.equals(client.getOurUser()))
-					guild.loadWebhooks();
 			}
 
 			String oldNick = user.getNicknameForGuild(guild);
@@ -562,10 +558,7 @@ class DispatchHandler {
 				Channel toUpdate = (Channel) client.getChannelByID(Long.parseUnsignedLong(json.id));
 				if (toUpdate != null) {
 					IChannel oldChannel = toUpdate.copy();
-
 					toUpdate = (Channel) DiscordUtils.getChannelFromJSON(toUpdate.getGuild(), json);
-
-					toUpdate.loadWebhooks();
 
 					client.getDispatcher().dispatch(new ChannelUpdateEvent(oldChannel, toUpdate));
 				}
@@ -630,9 +623,6 @@ class DispatchHandler {
 				IRole oldRole = toUpdate.copy();
 				toUpdate = DiscordUtils.getRoleFromJSON(guild, event.role);
 				client.dispatcher.dispatch(new RoleUpdateEvent(oldRole, toUpdate));
-
-				if (guild.getRolesForUser(client.getOurUser()).contains(toUpdate))
-					((Guild) guild).loadWebhooks();
 			}
 		}
 	}
@@ -767,9 +757,10 @@ class DispatchHandler {
 		client.dispatcher.dispatch(new ReactionRemoveEvent(message, reaction, user));
 	}
 
-	private void webhookUpdate(WebhookObject event) {
-		Channel channel = (Channel) client.getChannelByID(Long.parseUnsignedLong(event.channel_id));
-		if (channel != null)
-			channel.loadWebhooks();
+	private void webhookUpdate(WebhookUpdateEventResponse event) {
+		IGuild guild = shard.getGuildByID(Long.parseUnsignedLong(event.guild_id));
+		IChannel channel = guild.getChannelByID(Long.parseUnsignedLong(event.channel_id));
+
+		client.dispatcher.dispatch();
 	}
 }

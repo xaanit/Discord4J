@@ -17,64 +17,74 @@
 
 package sx.blah.discord.handle.impl.obj;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import sx.blah.discord.Discord4J;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.IShard;
 import sx.blah.discord.api.internal.DiscordClientImpl;
 import sx.blah.discord.api.internal.DiscordEndpoints;
 import sx.blah.discord.api.internal.DiscordUtils;
-import sx.blah.discord.api.internal.json.objects.WebhookObject;
 import sx.blah.discord.api.internal.json.requests.WebhookEditRequest;
-import sx.blah.discord.handle.impl.events.WebhookUpdateEvent;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.Image;
+import sx.blah.discord.util.LogMarkers;
 import sx.blah.discord.util.PermissionUtils;
 
-import java.util.EnumSet;
 import java.util.Objects;
 
 public class Webhook implements IWebhook {
 
-	protected final long id;
-	protected final IDiscordClient client;
-	protected final IChannel channel;
-	protected final IUser author;
-	protected volatile String name;
-	protected volatile String avatar;
-	protected final String token;
+	private final long id;
+	private final IChannel channel;
+	private final IUser author;
+	private final String name;
+	private final String avatar;
+	private final String token;
 
-	public Webhook(IDiscordClient client, String name, long id, IChannel channel, IUser author, String avatar, String token) {
-		this.client = client;
-		this.name = name;
+	public Webhook(long id, IChannel channel, IUser author, String name, String avatar, String token) {
 		this.id = id;
 		this.channel = channel;
 		this.author = author;
+		this.name = name;
 		this.avatar = avatar;
 		this.token = token;
 	}
 
 	@Override
-	public long getLongID() {
-		return id;
+	public void changeDefaultName(String name) {
+		edit(new WebhookEditRequest.Builder().name(name).build());
 	}
 
 	@Override
-	public IDiscordClient getClient() {
-		return client;
+	public void changeDefaultAvatar(Image avatar) {
+		changeDefaultAvatar(avatar.getData());
 	}
 
 	@Override
-	public IShard getShard() {
-		return channel.getShard();
+	public void changeDefaultAvatar(String avatar) {
+		edit(new WebhookEditRequest.Builder().avatar(avatar).build());
 	}
 
 	@Override
-	public IWebhook copy() {
-		return new Webhook(client, name, id, channel, author, avatar, token);
+	public void edit(String name, String avatar) {
+		edit(new WebhookEditRequest.Builder().name(name).avatar(avatar).build());
+	}
+
+	private void edit(WebhookEditRequest request) {
+		PermissionUtils.requirePermissions(getChannel(), getClient().getOurUser(), Permissions.MANAGE_WEBHOOKS);
+
+		try {
+			((DiscordClientImpl) getClient()).REQUESTS.PATCH.makeRequest(
+					DiscordEndpoints.WEBHOOKS + getStringID(),
+					DiscordUtils.MAPPER_NO_NULLS.writeValueAsString(request));
+		} catch (JsonProcessingException e) {
+			Discord4J.LOGGER.error(LogMarkers.HANDLE, "Discord4J Internal Exception", e);
+		}
 	}
 
 	@Override
 	public IGuild getGuild() {
-		return channel.getGuild();
+		return getChannel().getGuild();
 	}
 
 	@Override
@@ -102,68 +112,41 @@ public class Webhook implements IWebhook {
 		return token;
 	}
 
-	private void edit(String name, String avatar) {
-		PermissionUtils.requirePermissions(channel, client.getOurUser(), Permissions.MANAGE_WEBHOOKS);
-
-		WebhookObject response = ((DiscordClientImpl) client).REQUESTS.PATCH.makeRequest(
-				DiscordEndpoints.WEBHOOKS + id,
-				new WebhookEditRequest(name, avatar),
-				WebhookObject.class);
-
-		IWebhook oldWebhook = copy();
-		IWebhook newWebhook = DiscordUtils.getWebhookFromJSON(channel, response);
-
-		client.getDispatcher().dispatch(new WebhookUpdateEvent(oldWebhook, newWebhook));
-	}
-
-	@Override
-	public void changeDefaultName(String name) {
-		edit(name, null);
-	}
-
-	@Override
-	public void changeDefaultAvatar(String avatar) {
-		edit(this.name, avatar);
-	}
-
-	@Override
-	public void changeDefaultAvatar(Image avatar) {
-		edit(this.name, avatar.getData());
-	}
-
-	/**
-	 * Sets the CACHED name of the webhook.
-	 *
-	 * @param name The new cached name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Sets the CACHED avatar of the webhook.
-	 *
-	 * @param avatar The new cached avatar
-	 */
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
 	@Override
 	public void delete() {
-		PermissionUtils.requirePermissions(channel, client.getOurUser(), Permissions.MANAGE_WEBHOOKS);
+		PermissionUtils.requirePermissions(getChannel(), getClient().getOurUser(), Permissions.MANAGE_WEBHOOKS);
 
-		((DiscordClientImpl) client).REQUESTS.DELETE.makeRequest(DiscordEndpoints.WEBHOOKS + id);
+		((DiscordClientImpl) getClient()).REQUESTS.DELETE.makeRequest(DiscordEndpoints.WEBHOOKS + getStringID());
 	}
 
 	@Override
-	public boolean isDeleted(){
-		return getChannel().getWebhookByID(id) != this;
+	public boolean isDeleted() {
+		return getChannel().getWebhookByID(getLongID()) != this;
+	}
+
+	@Override
+	public long getLongID() {
+		return id;
+	}
+
+	@Override
+	public IShard getShard() {
+		return getChannel().getShard();
+	}
+
+	@Override
+	public IDiscordClient getClient() {
+		return getChannel().getClient();
+	}
+
+	@Override
+	public IWebhook copy() {
+		return new Webhook(id, channel, author, name, avatar, token);
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		return "Webhook(name: " + getStringID() + ")";
 	}
 
 	@Override
@@ -172,7 +155,7 @@ public class Webhook implements IWebhook {
 	}
 
 	@Override
-	public boolean equals(Object other) {
-		return DiscordUtils.equals(this, other);
+	public boolean equals(Object obj) {
+		return DiscordUtils.equals(this, obj);
 	}
 }
